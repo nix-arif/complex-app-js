@@ -1,4 +1,4 @@
-const userCollection = require("../db").collection("users");
+const userCollection = require("../db").db().collection("users");
 const bcrypt = require("bcryptjs");
 const validator = require("validator");
 
@@ -39,7 +39,7 @@ User.prototype.validate = function () {
   if (this.data.username.length > 0 && this.data.username.length < 3) {
     this.errors.push("Username must be at least 3 characters");
   }
-  if (!validator.isAlphaNumeric(this.data.username)) {
+  if (!validator.isAlphanumeric(this.data.username)) {
     this.errors.push("Username must only contains letters and numbers");
   }
   if (this.data.password.length > 0 && this.data.password.length < 6) {
@@ -57,13 +57,13 @@ User.prototype.login = function () {
           attemptedUser &&
           bcrypt.compareSync(this.data.password, attemptedUser.password)
         ) {
-          resolve(attemptedUser);
+          resolve("Congrat!!!");
         } else {
-          reject("You are not authorised");
+          reject("Invalid username / password");
         }
       })
       .catch((error) => {
-        reject("You are not authorised");
+        reject("Please try again later");
       });
   });
 };
